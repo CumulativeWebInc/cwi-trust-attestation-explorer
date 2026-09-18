@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CWI Attestation Explorer — verify any CWI attestation in under a minute</title>
+<meta name="description" content="Paste a CWI attestation UID and get a full independent verification report — schema, signer, chain, blob — in under a minute. No help from us needed.">
+<style>
+:root{--gold:#d4af37;--bg:#0c0d10;--card:#16181d;--line:#2a2e36;--txt:#e8e6df;--dim:#9a9789;--ok:#3fd97b;--bad:#ff5d5d;--skip:#c9a227}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.wrap{max-width:880px;margin:0 auto;padding:24px 16px 64px}
+header{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{font-size:30px}
+h1{font-size:22px;margin:0}
+.sub{color:var(--dim);font-size:14px}
+.badge{font-size:11px;font-weight:700;letter-spacing:.08em;padding:3px 10px;border-radius:999px;border:1px solid var(--gold);color:var(--gold)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin:18px 0}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+.step{background:#101216;border:1px solid var(--line);border-radius:10px;padding:12px}
+.step b{color:var(--gold)}
+input[type=text]{width:100%;padding:12px;border-radius:8px;border:1px solid var(--line);background:#0a0b0e;color:var(--txt);font:14px monospace}
+button{cursor:pointer;background:var(--gold);color:#111;border:0;border-radius:8px;padding:12px 22px;font-weight:700;font-size:15px;margin-top:10px}
+button:disabled{opacity:.5;cursor:wait}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td,th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.pill{font-size:11px;font-weight:700;padding:2px 10px;border-radius:999px;white-space:nowrap}
+.p-pass{background:rgba(63,217,123,.15);color:var(--ok);border:1px solid var(--ok)}
+.p-fail{background:rgba(255,93,93,.15);color:var(--bad);border:1px solid var(--bad)}
+.p-skip{background:rgba(201,162,39,.15);color:var(--skip);border:1px solid var(--skip)}
+.banner{border-radius:10px;padding:14px 16px;font-weight:700;font-size:17px;margin:12px 0}
+.banner.ok{background:rgba(63,217,123,.12);border:1px solid var(--ok);color:var(--ok)}
+.banner.bad{background:rgba(255,93,93,.12);border:1px solid var(--bad);color:var(--bad)}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;word-break:break-all}
+.dim{color:var(--dim)}
+.dirrow{display:flex;justify-content:space-between;gap:8px;padding:9px 6px;border-bottom:1px solid var(--line);cursor:pointer;font-size:13.5px}
+.dirrow:hover{background:#101216}
+pre{background:#0a0b0e;border:1px solid var(--line);border-radius:8px;padding:12px;overflow:auto;font-size:12px;max-height:320px}
+a{color:var(--gold)}
+footer{margin-top:36px;font-size:13px;color:var(--dim)}
+.err{color:var(--bad);margin-top:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<span class="logo">👑</span>
+<div><h1>CWI Attestation Explorer</h1><div class="sub">Trust Layer · Wave 1 — independent verification of CWI agent-memory attestations</div></div>
+<span class="badge">LIVE RECORDS</span>
+</header>
+
+<div class="card">
+<h2 style="margin-top:0">Verify in under a minute</h2>
+<div class="steps">
+<div class="step"><b>1.</b> Paste any CWI attestation UID below <span class="dim">(or tap one from the live directory)</span>.</div>
+<div class="step"><b>2.</b> The app fetches the public record from GitHub and checks it with the vendored <span class="mono">cwi-verification-kit</span> — entirely in your browser.</div>
+<div class="step"><b>3.</b> Read the verdict: schema determinism, uid=keccak256(signature), EIP-712 signer recovery, refUID chain, blob binding.</div>
+</div>
+<p class="dim" style="font-size:13px">No account, no wallet, no help from us. Everything runs client-side against public GitHub data.</p>
+</div>
+
+<div class="card">
+<h2 style="margin-top:0">Look up an attestation</h2>
+<input id="uid" type="text" placeholder="0x…" autocomplete="off" spellcheck="false">
+<button id="go">Verify</button>
+<div id="lookupErr" class="err"></div>
+</div>
+
+<div class="card">
+<h2 style="margin-top:0">Live attestation directory</h2>
+<div id="dir" class="dim">Loading live records from CumulativeWebInc/cwi-memory-chain…</div>
+</div>
+
+<div id="report"></div>
+
+<footer>
+<p><b>Kill rule:</b> zero external verifications with checkable receipts by 2026-10-09 → this standalone app is folded back into the memory-chain PWA and killed. Full text: <a href="KILL-RULE.md">KILL-RULE.md</a>.</p>
+<p>Verification engine: <a href="https://github.com/CumulativeWebInc/cwi-verification-kit">cwi-verification-kit v1.0.0</a>, vendored as <span class="mono">kit.js</span> (53,070 bytes) — no CDN dependency at runtime.</p>
+<p>Henry Pitts — known as Black Lansky — is the founder of Cumulative Web Inc and a systems architect working at the top of the technical track: he designs the systems, defines what "done" means, and verifies that it holds. His operating law is "verified or it didn't happen." He is building the trust layer underneath the AI-agent economy — the infrastructure that proves what agents build.</p>
+</footer>
+</div>
+<script src="kit.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
