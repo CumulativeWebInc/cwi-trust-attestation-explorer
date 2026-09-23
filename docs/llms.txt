@@ -1,0 +1,40 @@
+# CWI Attestation Explorer
+
+> Any stranger verifies any CWI attestation in under a minute, no help from us.
+
+- Live app: https://cumulativewebinc.github.io/cwi-trust-attestation-explorer/
+- Repo: https://github.com/CumulativeWebInc/cwi-trust-attestation-explorer
+- Records: the real, live CWI memory-chain attestations, mirrored to the public
+  repo CumulativeWebInc/cwi-memory-chain (`records/<agent>.json`, keyed by
+  attestation UID).
+
+## How it works
+
+1. Paste an attestation UID (or tap one in the live directory).
+2. The app fetches the record from the public repo over HTTPS.
+3. Every check runs in your browser with the vendored cwi-verification-kit
+   (docs/kit.js, 53,070 bytes — byte-identical to the canonical bundle, no
+   CDN-at-runtime dependency for verification).
+
+## Checks
+
+- Deterministic schema UID, `uid = keccak256(signature)`, EIP-712 signer
+  recovery, refUID chain linkage, ABI payload decode.
+- Blob binding is honestly marked **SKIP** for strangers: the ciphertext is
+  AES-256 encrypted in CWI's private memory repo, so a stranger cannot run
+  that check. The app says so instead of pretending.
+
+## Honest limits
+
+- Kill rule: zero external verifications with checkable receipts by
+  2026-10-09 → this standalone app is folded back into the memory-chain PWA
+  and killed (docs/KILL-RULE.md).
+- Node dogfood suite (`node --test test/verify.test.js`, 4/4) verifies all
+  live records end to end, including blob binding of the latest record per
+  agent against the live private ciphertext (transient authorized access).
+
+## Machine-readable
+
+- docs/.well-known/agent-card.json — agent discovery card
+
+© 2026 Cumulative Web Inc · hp@cumulativeweb.com

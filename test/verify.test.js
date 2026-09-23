@@ -2,6 +2,12 @@
 // Verifies ALL live CWI memory-chain records end to end against the vendored
 // docs/kit.js bundle, including blob binding (transient private-repo access;
 // the browser app honestly marks that check SKIP for strangers).
+// Blob-binding note (2026-09-23 correction): only the LATEST record per agent
+// can bind the live blob — historic records bind historic blobs by design
+// (every memory write re-encrypts the ciphertext, changing its hash).
+// Asserting otherwise made the suite fail on correct chains, so the blob
+// check runs against the latest record only; older records take the honest
+// SKIP path while keeping every other check (signature, schema, uid, chain).
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const https = require('https');
@@ -50,7 +56,7 @@ test('public repo exposes the live record layout (records/*.json)', async () => 
   global.__recFiles = files;
 });
 
-test('ALL live records verify clean, incl. blob binding, known truths, chain linkage', async (t) => {
+test('ALL live records verify clean; latest per agent binds the live blob; chain linkage holds', async (t) => {
   const files = global.__recFiles || ['records/CWI_Data.json', 'records/MUSE_CWI.json'];
   let total = 0;
   for (const f of files) {
@@ -62,11 +68,18 @@ test('ALL live records verify clean, incl. blob binding, known truths, chain lin
     const blob = JSON.parse(ghapi('/repos/CumulativeWebInc/cwi-agent-memory/git/blobs/' + meta.sha));
     const ciphertext = Buffer.from(blob.content.replace(/\n/g, ''), 'base64');
     const doc = JSON.parse(decrypt(ciphertext));
-    for (const r of recs) {
+    for (let i = 0; i < recs.length; i++) {
+      const r = recs[i];
+      const isLatest = i === recs.length - 1;
       total++;
-      const v = kit.verifyAttestation(r, { ciphertext, saltHex: doc.salt });
+      // Blob binding is only meaningful for the latest record (see header note).
+      const v = kit.verifyAttestation(r, isLatest ? { ciphertext, saltHex: doc.salt } : undefined);
       const failed = v.checks.filter((c) => c.ok === false).map((c) => c.name);
       assert.equal(failed.length, 0, agent + ' ' + r.uid.slice(0, 20) + ' failed: ' + failed.join(';'));
+      if (isLatest) {
+        const blobCk = v.checks.find((c) => c.name.startsWith('blob hash binds'));
+        assert.ok(blobCk && blobCk.ok === true, agent + ' latest record must bind the live blob, got: ' + (blobCk ? blobCk.detail : 'check missing'));
+      }
       assert.equal(r.attester.toLowerCase(), EXPECT_ATTESTER.toLowerCase(), 'attester mismatch');
       assert.equal(r.schemaUid.toLowerCase(), EXPECT_SCHEMA.toLowerCase(), 'schemaUid mismatch');
       assert.ok(String(r.schemaUid).startsWith('0x0fda26') && String(r.schemaUid).endsWith('f8'), 'schema UID bookends');

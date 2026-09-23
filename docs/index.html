@@ -3,8 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CWI Attestation Explorer — verify any CWI attestation in under a minute</title>
+<title>CWI Attestation Explorer — verify any CWI attestation in under a minute · Cumulative Web Inc</title>
 <meta name="description" content="Paste a CWI attestation UID and get a full independent verification report — schema, signer, chain, blob — in under a minute. No help from us needed.">
+<meta property="og:title" content="CWI Attestation Explorer · Cumulative Web Inc">
+<meta property="og:description" content="Verify any CWI attestation in under a minute — schema, signer, chain, blob. Runs entirely in your browser, no account, no wallet.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://cumulativewebinc.github.io/cwi-trust-attestation-explorer/">
+<meta property="og:image" content="https://cumulativewebinc.github.io/cwi-trust-attestation-explorer/brand/cwi-logo.jpg">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CWI Attestation Explorer · Cumulative Web Inc">
+<meta name="twitter:description" content="Independent verification of CWI agent-memory attestations in under a minute. No help from us needed.">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"CWI Attestation Explorer","url":"https://cumulativewebinc.github.io/cwi-trust-attestation-explorer/","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Organization","name":"Cumulative Web Inc","url":"https://cumulativeweb.com"},"description":"Independently verify CWI agent-memory attestations in under a minute: deterministic schema UID, uid = keccak256(signature), EIP-712 signer recovery, refUID chain linkage, ABI payload decode. Blob binding honestly marked SKIP for strangers (ciphertext is AES-256 encrypted)."}
+</script>
 <style>
 :root{--gold:#d4af37;--bg:#0c0d10;--card:#16181d;--line:#2a2e36;--txt:#e8e6df;--dim:#9a9789;--ok:#3fd97b;--bad:#ff5d5d;--skip:#c9a227}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
@@ -43,8 +54,8 @@ footer{margin-top:36px;font-size:13px;color:var(--dim)}
 <body>
 <div class="wrap">
 <header>
-<span class="logo">👑</span>
-<div><h1>CWI Attestation Explorer</h1><div class="sub">Trust Layer · Wave 1 — independent verification of CWI agent-memory attestations</div></div>
+<img src="brand/cwi-logo.jpg" alt="Cumulative Web Inc logo" style="width:52px;height:52px;border-radius:50%;border:2px solid var(--gold);object-fit:cover">
+<div><h1>CWI Attestation Explorer</h1><div class="sub">A Cumulative Web Inc Trust Layer product · independent verification of CWI agent-memory attestations</div></div>
 <span class="badge">LIVE RECORDS</span>
 </header>
 
@@ -72,9 +83,18 @@ footer{margin-top:36px;font-size:13px;color:var(--dim)}
 
 <div id="report"></div>
 
+<div class="card" style="text-align:center">
+<h2 style="margin-top:0">Need attestation infrastructure?</h2>
+<p class="dim">The Attestation Explorer is a CWI Trust Layer product — verifiable memory chains, independent explorers, and attestation-as-a-service for agent platforms.</p>
+<p><a href="mailto:hp@cumulativeweb.com?subject=Attestation%20infrastructure" style="display:inline-block;background:var(--gold);color:#111;font-weight:700;border-radius:8px;padding:12px 22px;text-decoration:none">Contact hp@cumulativeweb.com</a>
+<a href="https://cumulativewebinc.github.io/cwi-trust-attestation-explorer/" style="display:inline-block;border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:12px 22px;margin-left:8px">Try the live explorer →</a></p>
+<p class="dim" style="font-size:12px">A Cumulative Web Inc product. Pricing on request — no prices are published without approval.</p>
+</div>
+
 <footer>
 <p><b>Kill rule:</b> zero external verifications with checkable receipts by 2026-10-09 → this standalone app is folded back into the memory-chain PWA and killed. Full text: <a href="KILL-RULE.md">KILL-RULE.md</a>.</p>
 <p>Verification engine: <a href="https://github.com/CumulativeWebInc/cwi-verification-kit">cwi-verification-kit v1.0.0</a>, vendored as <span class="mono">kit.js</span> (53,070 bytes) — no CDN dependency at runtime.</p>
+<p>© 2026 Cumulative Web Inc · <a href="mailto:hp@cumulativeweb.com">hp@cumulativeweb.com</a> · <a href="llms.txt">llms.txt</a> · <a href=".well-known/agent-card.json">agent card</a></p>
 <p>Henry Pitts — known as Black Lansky — is the founder of Cumulative Web Inc and a systems architect working at the top of the technical track: he designs the systems, defines what "done" means, and verifies that it holds. His operating law is "verified or it didn't happen." He is building the trust layer underneath the AI-agent economy — the infrastructure that proves what agents build.</p>
 </footer>
 </div>
